@@ -27,6 +27,7 @@ jupyter-core==4.7.1
 MarkupSafe==2.0.1
 marshmallow==3.13.0
 mysql-connector-python==8.0.25
+mysqlclient==2.0.3
 parso==0.8.1
 passlib==1.7.4
 pep8==1.7.1
