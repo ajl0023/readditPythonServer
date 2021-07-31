@@ -1,3 +1,3 @@
 git add .
-git commit -m "stopped tracking .env"
+git commit -m "removed unnecessary modules"
 git push origin master
