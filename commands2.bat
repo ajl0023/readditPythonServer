@@ -1,3 +1,3 @@
 git add .
-git commit -m "added vercel.json"
+git commit -m "updated python inter"
 git push origin master
