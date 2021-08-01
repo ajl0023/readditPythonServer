@@ -1,7 +1,7 @@
 import os
 import uuid
 from datetime import timedelta
-
+import sqlite3
 import boto3
 import jwt
 from dotenv import load_dotenv
@@ -29,8 +29,16 @@ app = Flask(__name__, static_url_path='', static_folder='../../client/build')
 my_blueprint = Blueprint(
     'my_blueprint', __name__, template_folder='templates', url_prefix='/api')
 
+con = sqlite3.connect('example.db')
+cur = con.cursor()
+# x = 0
+# if x == 0:
+#     cur.execute("CREATE TABLE posts (content text)")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123@localhost:3306/mydb'
+#     x += 1
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
@@ -465,4 +473,4 @@ app.register_blueprint(my_blueprint)
 print(50)
 if __name__ == "__main__":
 
-    serve(app, listen='*:8080')
+    app.run(debug=True)
