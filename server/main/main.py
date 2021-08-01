@@ -17,6 +17,7 @@ from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import (column_property, defer, deferred, relationship)
 from sqlalchemy.sql.expression import desc, insert, select
 from sqlalchemy.sql.schema import CheckConstraint
+from waitress import serve
 
 from utils import calcVoteDown, calcVoteUp
 
@@ -34,11 +35,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
 db = SQLAlchemy(app)
-
-
-class View(Resource):
-    def get(self):
-        return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.before_request
@@ -466,6 +462,7 @@ def votedown(id):
 
 
 app.register_blueprint(my_blueprint)
+print(50)
 if __name__ == "__main__":
 
-    app.run(debug=True)
+    serve(app, listen='*:8080')
