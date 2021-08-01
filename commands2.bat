@@ -1,3 +1,3 @@
 git add .
-git commit -m "converted to sqlite"
+git commit -m "removed modules in requirements.txt"
 git push origin main
