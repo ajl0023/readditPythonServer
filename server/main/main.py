@@ -29,8 +29,6 @@ app = Flask(__name__, static_url_path='', static_folder='../../client/build')
 my_blueprint = Blueprint(
     'my_blueprint', __name__, template_folder='templates', url_prefix='/api')
 
-con = sqlite3.connect('example.db')
-cur = con.cursor()
 # x = 0
 # if x == 0:
 #     cur.execute("CREATE TABLE posts (content text)")
