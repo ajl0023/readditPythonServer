@@ -21,6 +21,10 @@ handlers:
   # This handler routes all requests not caught above to your main app. It is
   # required when static routes are defined, but can be omitted (along with
   # the entire handlers section) when there are no static files defined.
+  - url: /api/.*
+    script: main.py
+  - url: /(.*\..+)$
+    static_files: static/build/\1
+    upload: static/build/(.*\..+)$
   - url: /.*
     static_dir: static/build
-    
