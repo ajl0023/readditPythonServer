@@ -25,7 +25,7 @@ from utils import calcVoteDown, calcVoteUp
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 load_dotenv()
-app = Flask(__name__, static_url_path='',static_folder='./static/build')
+app = Flask(__name__, static_url_path='', static_folder='./static/build')
 my_blueprint = Blueprint(
     'my_blueprint', __name__, template_folder='templates', url_prefix='/api')
 
@@ -100,9 +100,6 @@ class Votes(db.Model):
     authorid = db.Column(db.String(200), db.ForeignKey('users.id'))
     score = db.Column(db.Integer)
     uid = db.Column(db.String(200))
-    __table_args__ = (
-        CheckConstraint('dfgzdfgzdfgg'),
-    )
 
 
 class Posts(db.Model):
@@ -188,7 +185,7 @@ def addVoteTotal(id, model):
 
 @ app.route('/', methods=['GET'])
 def sendClient():
-    print(Flask.static_folder)
+
     return send_from_directory(app.static_folder, 'index.html')
 
 
@@ -267,7 +264,7 @@ def editPost(id):
     user = request.user.get("id") if request.user else None
     post = Posts.query.where(Posts.id == id).update(
         dict(content=case((Posts.post == user, request.get_json().get('content')))))
-    print(post, 234234234)
+
     db.session.commit()
 
     return jsonify(post)
@@ -470,8 +467,11 @@ def votedown(id):
 
 app.register_blueprint(my_blueprint)
 
+
 def create_app():
     return app
+
+
 if __name__ == "__main__":
 
     app.run(debug=True)
