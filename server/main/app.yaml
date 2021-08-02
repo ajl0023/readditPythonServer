@@ -13,7 +13,7 @@
 # limitations under the License.
 
 runtime: python39
-
+entrypoint: gunicorn -b :$PORT main:app
 handlers:
   # This configures Google App Engine to serve the files in the app's static
   # directory.
@@ -22,4 +22,5 @@ handlers:
   # required when static routes are defined, but can be omitted (along with
   # the entire handlers section) when there are no static files defined.
   - url: /.*
-    script: auto
+    static_dir: static/build
+    

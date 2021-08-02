@@ -25,7 +25,7 @@ from utils import calcVoteDown, calcVoteUp
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 load_dotenv()
-app = Flask(__name__, static_url_path='', static_folder='../../client/build')
+app = Flask(__name__, static_url_path='',static_folder='./static/build')
 my_blueprint = Blueprint(
     'my_blueprint', __name__, template_folder='templates', url_prefix='/api')
 
@@ -36,7 +36,7 @@ my_blueprint = Blueprint(
 #     x += 1
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mydb.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://admin:100962austin@database-1.c0yjxjsy2dww.us-west-1.rds.amazonaws.com:3306/readditdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 
@@ -118,7 +118,7 @@ class Posts(db.Model):
 
     content = db.Column(db.String(200))
     hotScore = db.Column(db.Float)
-    author_id = db.Column(db.String(200), db.ForeignKey('users.id'))
+    author = db.Column(db.String(200), db.ForeignKey('users.id'))
     user = relationship("Users", back_populates="posts",
                         uselist=False, lazy=False)
     comments = relationship(
@@ -188,6 +188,7 @@ def addVoteTotal(id, model):
 
 @ app.route('/', methods=['GET'])
 def sendClient():
+    print(Flask.static_folder)
     return send_from_directory(app.static_folder, 'index.html')
 
 
@@ -255,7 +256,7 @@ def singlePost(id):
 @ my_blueprint.route('/posts/<id>', methods=['DELETE'])
 def deletePost(id):
     user = request.user.get("id") if request.user else None
-    post = Posts.query.where(Posts.id == id, Posts.author_id == user).first()
+    post = Posts.query.where(Posts.id == id, Posts.author == user).first()
 
     db.session.delete(post)
     db.session.commit()
@@ -265,7 +266,7 @@ def deletePost(id):
 def editPost(id):
     user = request.user.get("id") if request.user else None
     post = Posts.query.where(Posts.id == id).update(
-        dict(content=case((Posts.author_id == user, request.get_json().get('content')))))
+        dict(content=case((Posts.post == user, request.get_json().get('content')))))
     print(post, 234234234)
     db.session.commit()
 
@@ -284,7 +285,7 @@ def createPost():
     if user is False:
         abort(403)
     post = Posts(title=request.form.get('title'), content=request.form.get('content'),
-                 author_id=user.get('id'), image=request.form.get('image'), hotScore=func.log10(1) * 86400 / .301029995663981 + func.UNIX_TIMESTAMP(Posts.createdAt))
+                 author=user.get('id'), image=request.form.get('image'), hotScore=func.log10(1) * 86400 / .301029995663981 + func.UNIX_TIMESTAMP(Posts.createdAt))
 
     db.session.add(post)
 
@@ -468,7 +469,9 @@ def votedown(id):
 
 
 app.register_blueprint(my_blueprint)
-print(50)
+
+def create_app():
+    return app
 if __name__ == "__main__":
 
     app.run(debug=True)
